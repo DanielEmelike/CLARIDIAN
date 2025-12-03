@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claridian: ANFIS Model</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="Claridian_model_page_style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/echarts-gl@2/dist/echarts-gl.min.js"></script>
+   
+</head>
+<body class="dark-mode"> 
+    <div id="desktop-only-warning">
+        <i class="fas fa-desktop" style="font-size: 48px; margin-bottom: 20px;"></i>
+        <h2>Desktop View Required</h2>
+    </div>    
+    <div class="dashboard-container">
+        <div class="model-page-header glass-section">
+            <h2 class="modal-title"><i class="fas fa-brain"></i> ANFIS Model </h2>
+            <a href="Claridian_home.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </a>
+        </div>
+        
+        <main class="model-page-grid">           
+            <section class="glass-section model-section architecture-section ">
+                <h3>Model Architecture Overview</h3>
+                <div id="isometric-process-container">                       
+                   <!-- STEP 1: INPUT LAYER -->
+                    <div class="process-step step-1" style="--step-color: #ff8c00; --step-light: #ffb94f;" data-num="1">
+                        <div class="step-content_1">
+                            <p class="step-title"><i class="fas fa-layer-group step-icon"></i> INPUT LAYER</p>
+                            <p class="step-description">6 Clinical Metrics are received and normalized.</p>
+                        </div>
+                    </div>
+                    <div class="connector connector-1-2"></div>
+                    <!-- STEP 2: FUZZIFICATION LAYER -->
+                    <div class="process-step step-2" style="--step-color: #cc3333; --step-light: #ff5050;" data-num="2">
+                        <div class="step-content_2">
+                            <p class="step-title"><i class="fas fa-sliders-h step-icon"></i> FUZZIFICATION</p>
+                            <p class="step-description">Crisp inputs are converted into fuzzy sets via Membership Functions (MFs).</p>
+                        </div>
+                    </div>
+                    <div class="connector connector-2-3"></div>
+                    <!-- STEP 3: RULE LAYER -->
+                    <div class="process-step step-3" style="--step-color: #2e7d32; --step-light: #76ff7a;" data-num="3">
+                        <div class="step-content_3">
+                            <p class="step-title"><i class="fas fa-brain step-icon"></i> RULE LAYER</p>
+                            <p class="step-description">Fuzzy rules are evaluated, and weighting factors are applied.</p>
+                        </div>
+                    </div>
+                    <div class="connector connector-3-4"></div>
+                    <!-- STEP 4: DEFUZZIFICATION LAYER -->
+                    <div class="process-step step-4" style="--step-color: #1565c0; --step-light: #81d4fa;" data-num="4">
+                        <div class="step-content_4">
+                            <p class="step-title"><i class="fas fa-chart-line step-icon"></i> DEFUZZIFICATION</p>
+                            <p class="step-description">Fuzzy output is converted back to a final crisp Risk Score (0-100).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <p class="section-note">The ANFIS framework adapts the shapes of the MFs for optimal prediction accuracy.</p>
+            </section>
+            
+            <section class="glass-section model-section fuzzification-section">
+                <h3>Membership Functions</h3>
+                <p class="section-desc">Each input score (0-10) is translated into a percentage of belonging to <span class="risk-low">Low</span>, <span class="risk-low">Moderate</span>, and <span class="risk-low">High</span> linguistic categories.</p>
+                <div id="fuzzification-explanation">
+                    <p><strong>Visualizing Suspiciousness:</strong></p>
+                    <div id="mf-chart-susp" style="width: 100%; height: 200px;"></div>
+                    <p style="margin-top: 20px; color: lightgrey;">Note: This dynamic visualization is currently inactive.</p>
+                    
+                </div>
+            </section>
+            
+            <section class="glass-section model-section rule-section full-width">
+                <h3>Rule Base</h3>
+                <p class="section-desc">The Inference Engine evaluates the defined Rule Base, combining antecedent conditions with fuzzy operators to derive the system's output.</p>
+                
+                <table class="rule-table">
+                    <thead>
+                        <tr>
+                            <th class="low-risk-header">
+                                <h4><i class="fas fa-check-circle low-risk-text"></i> Low Risk Rules</h4>
+                            </th>
+                            <th class="moderate-risk-header">
+                                <h4><i class="fas fa-circle-exclamation moderate-risk-text"></i> Moderate Risk Rules</h4>
+                            </th>
+                            <th class="high-risk-header">
+                                <h4><i class="fas fa-exclamation-triangle high-risk-text"></i> High Risk Rules</h4>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <ul>
+                                    <li>IF Suspiciousness is <span class="risk-color">Low</span> AND Social Withdrawal is <span class="risk-color">Low</span> THEN Risk is <span class="risk-color">Low</span>.</li>
+                                    <li>IF Sleep Quality is <span class="risk-color">Good</span> AND Attention is <span class="risk-color">Intact</span> THEN Risk is <span class="risk-color">Low</span>.</li>
+                                    <li>IF Role Functioning is <span class="risk-color">Intact</span> AND Acoustic Coherence is <span class="risk-color">High</span> THEN Risk is <span class="risk-color">Low</span>.</li>
+                                    <li>IF Role Functioning is <span class="risk-color">Intact</span> AND Sleep Quality is <span class="risk-color">Good</span> THEN Risk is <span class="risk-color">Low</span>.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>IF Suspiciousness is <span class="risk-color">Moderate</span> AND Social Withdrawal is <span class="risk-color">Moderate</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                    <li>IF Acoustic Coherence is <span class="risk-color">Medium</span> AND Attention is <span class="risk-color">Impaired</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                    <li>IF Sleep Quality is <span class="risk-color">Poor</span> AND Attention is <span class="risk-color">Impaired</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                    <li>IF Role Functioning is <span class="risk-color">Decline</span> AND Suspiciousness is <span class="risk-color">Low</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                    <li>IF Social Withdrawal is <span class="risk-color">Moderate</span> AND Attention is <span class="risk-color">Impaired</span> AND Role Functioning is <span class="risk-color">Decline</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                    <li>IF Suspiciousness is <span class="risk-color">Moderate</span> AND Acoustic Coherence is <span class="risk-color">Medium</span> AND Sleep Quality is <span class="risk-color">Average</span> THEN Risk is <span class="risk-color">Medium</span>.</li>
+                                </ul>
+                            </td>
+                            <td>
+                                <ul>
+                                    <li>IF Suspiciousness is <span class="risk-color">Sub-clinical</span> AND Acoustic Coherence is <span class="risk-color">Low</span> THEN Risk is <span class="risk-color">High</span>.</li>
+                                    <li>IF Social Withdrawal is <span class="risk-color">High</span> AND Role Functioning is <span class="risk-color">Severe Decline</span> THEN Risk is <span class="risk-color">High</span>.</li>
+                                    <li>IF Suspiciousness is <span class="risk-color">Sub-clinical</span> OR Role Functioning is <span class="risk-color">Severe Decline</span> THEN Risk is <span class="risk-color">High</span>.</li>
+                                    <li>IF Suspiciousness is <span class="risk-color">Sub-clinical</span> AND Sleep Quality is <span class="risk-color">Poor</span> AND Attention is <span class="risk-color">Severe</span> THEN Risk is <span class="risk-color">High</span>.</li>
+                                    <li>IF Acoustic Coherence is <span class="risk-color">Low</span> AND Role Functioning is <span class="risk-color">Severe Decline</span> THEN Risk is <span class="risk-color">High</span>.</li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                </section>
+        </main>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+             // CSS Variables for ECharts
+            const highRiskColor = getComputedStyle(document.documentElement).getPropertyValue('--color-risk-high').trim();
+            const moderateRiskColor = getComputedStyle(document.documentElement).getPropertyValue('--color-risk-moderate').trim();
+            const lowRiskColor = getComputedStyle(document.documentElement).getPropertyValue('--color-risk-low').trim();
+            const primary300 = getComputedStyle(document.documentElement).getPropertyValue('--primary-300').trim(); 
+
+            // --- 1. MEMBERSHIP FUNCTION CHART (Suspiciousness) ---
+             var mfChartDom = document.getElementById('mf-chart-susp');
+             var mfChart = echarts.init(mfChartDom, 'transparent');
+             var mfOption = {
+                color: [highRiskColor, moderateRiskColor, lowRiskColor],
+                legend: { data: ['Sub-clinical', 'Moderate', 'Low'], textStyle: { color: primary300 } },
+                grid: { left: '3%', right: '4%', bottom: '3%', containLabel: true },
+                xAxis: { 
+                    type: 'value', min: 0, max: 10, name: 'Input Score', nameLocation: 'middle', nameGap: 25,
+                    axisLabel: { color: primary300 }, 
+                    axisLine: { lineStyle: { color: primary300 } },
+                    splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } } 
+                },
+                yAxis: { 
+                    type: 'value', min: 0, max: 1, name: 'Membership Degree', nameLocation: 'middle', nameGap: 30,
+                    axisLabel: { color: primary300 },
+                    axisLine: { lineStyle: { color: primary300 } },
+                    splitLine: { lineStyle: { color: 'rgba(255, 255, 255, 0.1)' } } 
+                },
+                series: [
+                    // MFs based on Claridian_app.py:
+                    // Suspiciousness['Sub-clinical'] = fuzz.trimf(input_range, [6, 10, 10]) 
+                    { name: 'Sub-clinical', type: 'line', smooth: true, data: [[6, 0], [10, 1]], areaStyle: {opacity: 0.2}}, 
+                    // Suspiciousness['Moderate'] = fuzz.trimf(input_range, [2, 5, 8])
+                    { name: 'Moderate', type: 'line', smooth: true, data: [[2, 0], [5, 1], [8, 0]], areaStyle: {opacity: 0.2}},
+                    // Suspiciousness['Low'] = fuzz.trimf(input_range, [0, 0, 4]) 
+                    { name: 'Low', type: 'line', smooth: true, data: [[0, 1], [4, 0]], areaStyle: {opacity: 0.2}}
+                ]
+            };
+            mfChart.setOption(mfOption);
+
+           
+            window.addEventListener('resize', function () {
+                mfChart.resize();
+            });
+
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Claridian: Psychosis Risk Dashboard</title>
+    <link rel="stylesheet" href="Claridian_style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/echarts/5.4.3/echarts.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+</head>
+<body>
+    <div id="desktop-only-warning">
+        <i class="fas fa-desktop" style="font-size: 48px; margin-bottom: 20px;"></i>
+        <h2>Desktop View Required</h2>
+    </div>
+    <div class="dashboard-container">
+        <header class="top-nav">
+            <h1 class="logo">CLARIDIAN<span>.ai</span></h1>
+            <nav>
+                <a href="#" class="active"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a id="report-link" style="cursor: pointer;"><i class="fas fa-file-alt"></i> Reports</a>
+                <a href="#"><i class="fas fa-user-md"></i> Book Appointment</a>
+            </nav>
+            <div class="user-profile">
+                <i class="fas fa-bell"></i>
+                <div class="avatar">D</div>
+            </div>
+        </header>
+                <!-- Main Grid Section -->
+        <main class="dashboard-grid" id="main-content">           
+            <section id="interpretation">
+                <div class="triggered-rules">
+                    <div class="glass-section">
+                        <h3 id="interpret_title">Risk Interpretation</h3>
+                        <ul id="triggered-rules-list">
+                            <li>Model rules will appear here after assessment.</li>
+                        </ul>
+                    </div>
+                </div>               
+                <div class="action-plan">
+                    <div class="glass-section">
+                        <h3 id="interpret_title">Preventative Action Plan</h3>
+                        <p class="action-item muted-text-initial" id="action-plan-text">
+                            <i class="fas fa-info-circle"></i> Awaiting input to recommend next clinical steps.
+                        </p>
+                    </div>
+                </div>
+                <div class="health-plan">
+                    <div class="glass-section **health-plan-card**">
+                        <div class="health-plan-header">
+                            <span class="plan-title"><h3 id="interpret_title">Health Plan</h3></span>
+                            <span class="plan-date" id="health-plan-date"></span> 
+                        </div>                        
+                        <div class="timeline-visualization">
+                            <div class="time-axis" id="time-axis">
+                                </div>
+                            <div class="time-indicator" id="time-indicator" style="left: 50%;"></div>
+                            
+                            <div class="timeline-items-container" id="timeline-items-container">
+                                </div>
+                            </div>
+                    </div>
+                </div>
+            </section>            
+            <section id="base">
+                
+                <div class="input_section">
+                    <div class="input-group method-select">
+                        <div class="method-buttons">
+                            <button class="btn btn-secondary" id="method-slider">Questionnaire</button> 
+                            <button class="btn btn-secondary" id="method-text">Text Input</button>
+                        </div>
+                    </div>               
+                </div>
+            </section>             
+            <section class="card risk-visualization-card">
+                <h3>Psychosis Risk Score</h3>
+                <div id="risk-chart-container" style="width: 100%; height: 230px; margin-top: -10px;"></div>
+
+                <div id="gif">
+                    <a href="Claridian_model_transparency.html" target="_blank" id="anfis-model-link"><i class="fas fa-brain"></i> ANFIS Model</a>
+                </div>
+                
+                <div id="input_tab">              
+                    <div id="slider-input-area" class="hidden"> 
+                        <p class="desc">Adjust the raw inputs to assess the transition risk.</p>
+                        
+                        <div class="input-tabs">
+                            <button class="tab-nav-btn prev-btn" id="prev-tab-btn" disabled><i class="fas fa-chevron-left"></i></button>
+                            <span id="tab-title" class="tab-title">Core Metrics (1/2)</span>
+                            <button class="tab-nav-btn next-btn" id="next-tab-btn"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+
+                        <div id="input-panel-core" class="input-panel">
+                            <div class="input-group">
+                                <label for="suspiciousness">Suspiciousness [Sub-threshold]</label>
+                                <input type="range" id="suspiciousness" min="0" max="10" step="0.5" value="5.0">
+                                <span id="susp-val" class="input-value">5.0</span>
+                            </div>
+                            
+                            <div class="input-group">
+                                <label for="coherence">Acoustic Coherence [Speech Pattern]</label>
+                                <input type="range" id="coherence" min="0" max="10" step="0.5" value="5.0">
+                                <span id="coh-val" class="input-value">5.0</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="sleep">Sleep Quality Index [Auxiliary]</label>
+                                <input type="range" id="sleep" min="0" max="10" step="0.5" value="5.0">
+                                <span id="sleep-val" class="input-value">5.0</span> 
+                            </div>
+                        </div>
+
+                        <div id="input-panel-extended" class="input-panel hidden">
+                            <div class="input-group">
+                                <label for="social_withdrawal">Social Withdrawal [Negative Symptom]</label>
+                                <input type="range" id="social_withdrawal" min="0" max="10" step="0.5" value="5.0">
+                                <span id="withdrawal-val" class="input-value">5.0</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="attention">Attention/Working Memory [Cognitive Domain]</label>
+                                <input type="range" id="attention" min="0" max="10" step="0.5" value="5.0">
+                                <span id="attention-val" class="input-value">5.0</span>
+                            </div>
+
+                            <div class="input-group">
+                                <label for="functioning">Role Functioning Score [Functional Outcome]</label>
+                                <input type="range" id="functioning" min="0" max="10" step="0.5" value="5.0">
+                                <span id="functioning-val" class="input-value">5.0</span>
+                            </div>
+                        </div>
+                        
+                        <button id="assess-btn" class="assess-button">Run Assessment</button>   
+                    </div>
+
+                    <div id="text-input-area" class="hidden">
+                        <p class="desc">Provide a detailed clinical description for risk scoring.</p>
+                        <textarea id="clinician-text-input" rows="6" placeholder="Describe the patient's current mental state, symptom intensity, and sleep quality here..."></textarea>
+                        <button id="analyze-text-btn" class="assess-button"><i class="fas fa-robot"></i> Analyze Text</button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    
+    <script src="Claridian_script.js"></script>
+</body>
+</html>
